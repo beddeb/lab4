@@ -48,16 +48,16 @@ public:
     void removeEdge(size_t from, size_t to);
 
     // Проверка наличия ребра между двумя вершинами
-    bool hasEdge(size_t from, size_t to) const;
+    [[nodiscard]] bool hasEdge(size_t from, size_t to) const;
 
     // Получение списка смежных вершин для данной вершины
-    ListSequence<size_t> getNeighbors(size_t index) const;
+    [[nodiscard]] ListSequence<size_t> getNeighbors(size_t index) const;
 
     // Получение количества вершин
-    size_t getVertexCount() const;
+    [[nodiscard]] size_t getVertexCount() const;
 
     // Получение количества рёбер
-    size_t getEdgeCount() const;
+    [[nodiscard]] size_t getEdgeCount() const;
 
     // Получение вершины по индексу
     const Vertex& getVertex(size_t index) const;

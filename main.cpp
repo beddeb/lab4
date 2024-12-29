@@ -18,8 +18,12 @@ int main() {
     graph.addEdge(1, 3); // B -> D
     graph.addEdge(2, 3); // C -> D
     graph.addEdge(1, 4);
+    graph.addEdge(0, 3);
+    graph.addEdge(1, 2);
 
     GraphRenderer<std::string> renderer(graph, 800, 600);
+    renderer.colorizeGraph();
+    renderer.highlightSpanningTree();  // Выделяем остов графа
     renderer.run();
 
     return 0;
