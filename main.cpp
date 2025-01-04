@@ -4,10 +4,8 @@
 
 
 int main() {
-    // Create a graph for string vertex identifiers
     Graph<std::string> graph;
 
-    // We will use a command vector for reference
     std::cout << "Available commands:\n"
               << "  addv <vertex>       - Add a vertex\n"
               << "  delv <vertex>       - Remove a vertex\n"
@@ -54,7 +52,6 @@ int main() {
             std::cout << "Coloring will be applied when rendering.\n";
         }
         else if (command == "render") {
-            // Create a rendering object, passing our graph
             GraphRenderer<std::string> renderer(graph, 800, 600);
             if (needColor) {
                 renderer.toggleColorizeGraph();
