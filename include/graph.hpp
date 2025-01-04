@@ -1,72 +1,109 @@
-#ifndef GRAPH_HPP
-#define GRAPH_HPP
+#pragma once
 
-#include "list_sequence.hpp"
 #include "array_sequence.hpp"
+#include "hash_table.hpp"
+#include <stdexcept>
 
 
-template <typename T>
+template<typename T>
 class Graph {
-public:
-    using Vertex = T;
-
 private:
-    // Хранилище вершин
-    ArraySequence<Vertex> vertices;
-
-    // Список смежности: для каждой вершины хранится список её соседей
-    ArraySequence<ListSequence<size_t>> adjacencyList;
+    HashTable<T, ArraySequence<T>> adjacencyList;
 
 public:
-    Graph() = default;
-
-    // Конструктор копирования
-    Graph(const Graph& other);
-
-    // Конструктор перемещения
-    Graph(Graph&& other) noexcept;
-
-    // Деструктор
-    ~Graph() = default;
-
-    // Оператор присваивания копированием
-    Graph& operator=(const Graph& other);
-
-    // Оператор присваивания перемещением
-    Graph& operator=(Graph&& other) noexcept;
-
     // Добавление вершины
-    void addVertex(const Vertex& vertex);
+    void addVertex(const T &vertex) {
+        if (!adjacencyList.contains(vertex)) {
+            adjacencyList.insert(vertex, ArraySequence<T>());
+        }
+    }
 
-    // Удаление вершины по индексу
-    void removeVertex(size_t index);
+    // Добавление ребра (неориентированного)
+    void addEdge(const T &vertex1, const T &vertex2) {
+        addVertex(vertex1);
+        addVertex(vertex2);
 
-    // Добавление ребра между двумя вершинами по индексам
-    void addEdge(size_t from, size_t to);
+        ArraySequence<T>& neighbors1 = adjacencyList.get(vertex1);
+        ArraySequence<T>& neighbors2 = adjacencyList.get(vertex2);
 
-    // Удаление ребра между двумя вершинами по индексам
-    void removeEdge(size_t from, size_t to);
+        // Проверка и добавление vertex2 в список соседей vertex1
+        if (!neighbors1.contains(vertex2)) {
+            neighbors1.add(vertex2);
+        }
 
-    // Проверка наличия ребра между двумя вершинами
-    [[nodiscard]] bool hasEdge(size_t from, size_t to) const;
+        // Проверка и добавление vertex1 в список соседей vertex2
+        if (!neighbors2.contains(vertex1)) {
+            neighbors2.add(vertex1);
+        }
+    }
 
-    // Получение списка смежных вершин для данной вершины
-    [[nodiscard]] ListSequence<size_t> getNeighbors(size_t index) const;
+    // Проверка наличия вершины
+    bool hasVertex(const T &vertex) const {
+        return adjacencyList.contains(vertex);
+    }
+
+    // Проверка наличия ребра
+    bool hasEdge(const T &vertex1, const T &vertex2) const {
+        if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
+            return false;
+        }
+        const ArraySequence<T>& neighbors = adjacencyList.get(vertex1);
+        return neighbors.contains(vertex2);
+    }
+
+    // Получение соседей вершины
+    ArraySequence<T> getNeighbors(const T &vertex) const {
+        if (!hasVertex(vertex)) {
+            throw std::runtime_error("Vertex not found");
+        }
+        return adjacencyList.get(vertex);
+    }
+
+    // Удаление ребра
+    void removeEdge(const T &vertex1, const T &vertex2) {
+        if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
+            return;
+        }
+
+        ArraySequence<T>& neighbors1 = adjacencyList.get(vertex1);
+        neighbors1.removeElement(vertex2);
+
+        ArraySequence<T>& neighbors2 = adjacencyList.get(vertex2);
+        neighbors2.removeElement(vertex1);
+    }
+
+    // Удаление вершины
+    void removeVertex(const T &vertex) {
+        if(!hasVertex(vertex)) {
+            throw std::runtime_error("Vertex not found");
+        }
+
+        ArraySequence<T> neighbors = adjacencyList.get(vertex);
+        for (size_t i = 0; i < neighbors.getSize(); ++i) {
+            const T& adjacentVertex = neighbors.get(i);
+            ArraySequence<T>& adjNeighbors = adjacencyList.get(adjacentVertex);
+            adjNeighbors.removeElement(vertex);
+        }
+
+        adjacencyList.remove(vertex);
+    }
 
     // Получение количества вершин
-    [[nodiscard]] size_t getVertexCount() const;
+    size_t getVertexCount() const {
+        return adjacencyList.size();
+    }
 
-    // Получение количества рёбер
-    [[nodiscard]] size_t getEdgeCount() const;
+    // Получение количества ребер
+    size_t getEdgeCount() const {
+        size_t edgeCount = 0;
+        for (const auto& pair : adjacencyList) {
+            edgeCount += pair.second.getSize();
+        }
+        return edgeCount / 2;
+    }
 
-    // Получение вершины по индексу
-    const Vertex& getVertex(size_t index) const;
-
-    // Рендеринг графа (для отладки)
-    void print() const;
+    // Получение списка смежности
+    HashTable<T, ArraySequence<T>> getAdjacencyList() const {
+        return adjacencyList;
+    }
 };
-
-// Подключаем файл с определениями методов шаблона
-#include "../src/graph.tpp"
-
-#endif // GRAPH_HPP

@@ -57,6 +57,28 @@ public:
         --Sequence<T>::size;
     }
 
+    bool contains(const T& element) const {
+        for (size_t i = 0; i < Sequence<T>::size; ++i) {
+            if (data[i] == element) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void removeElement(const T& element) {
+        for (size_t i = 0; i < Sequence<T>::size; ++i) {
+            if (data[i] == element) {
+                for (size_t j = i; j < Sequence<T>::size - 1; ++j) {
+                    data[j] = data[j + 1];
+                }
+                --Sequence<T>::size;
+                return;
+            }
+        }
+        throw std::runtime_error("Element not found");
+    }
+
     T &get(size_t index) override {
         if (index >= Sequence<T>::size) {
             throw std::out_of_range("Index out of range");
@@ -112,6 +134,7 @@ public:
         return true;
     }
 
+    // Оператор неравенства
     bool operator!=(const ArraySequence &other) const {
         return !(*this == other);
     }
