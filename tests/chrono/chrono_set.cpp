@@ -74,14 +74,14 @@ void chronoRemoveSet(size_t elementCount) {
 }
 
 void chronoSet(size_t num_elements) {
-    cout << "ISet tests for <int>:" << endl;
+    cout << "Set tests for <int>:" << endl;
     chronoInsertSet<int, HashSet<int>>(num_elements);
     chronoInsertSet<int, std::set<int>>(num_elements);
     chronoRemoveSet<int, HashSet<int>>(num_elements);
     chronoRemoveSet<int, std::set<int>>(num_elements);
     cout << endl;
 
-    cout << "ISet tests for <string>:" << endl;
+    cout << "Set tests for <string>:" << endl;
     chronoInsertSet<string, HashSet<string>>(num_elements);
     chronoInsertSet<string, std::set<string>>(num_elements);
     chronoRemoveSet<string, HashSet<string>>(num_elements);
