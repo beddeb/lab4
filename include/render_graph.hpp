@@ -25,6 +25,7 @@ public:
         if (!font.loadFromFile("../externallibs/font.ttf")) {
             throw std::runtime_error("Failed to load font");
         }
+        coloring = greedyColoring();
     }
 
     void run() {
@@ -35,8 +36,8 @@ public:
         }
     }
 
-    void colorizeGraph() {
-        isColored = true;
+    void toggleColorizeGraph() {
+        isColored = !isColored;
     }
 
 private:
@@ -53,28 +54,37 @@ private:
     // Жадный алгоритм раскраски графа
     std::vector<size_t> greedyColoring() {
         size_t vertexCount = graph.getVertexCount();
-        std::vector<size_t> colors(vertexCount, -1);  // Изначально все вершины не раскрашены
-        colors[0] = 0;  // Первая вершина получает первый цвет
+        std::vector<size_t> colors(vertexCount, -1);
+        std::map<T, size_t> vertexIndexMap; // Создаем карту соответствия вершины и индекса
+        size_t index = 0;
 
-        for (size_t i = 1; i < vertexCount; ++i) {
-            std::vector<bool> available(vertexCount, true);  // Доступные цвета
+        // Назначаем индексы вершинам, чтобы использовать их в массиве цветов
+        for (const auto& pair : graph.getAdjacencyList()) {
+            vertexIndexMap[pair.first] = index++;
+        }
+
+        index = 0;
+        for (const auto& pair : graph.getAdjacencyList()) {
+            const T& currentVertex = pair.first;
+            std::vector<bool> available(vertexCount, true);
 
             // Проверяем цвета соседей
-            const auto& neighbors = graph.getNeighbors(i);
+            const auto& neighbors = graph.getNeighbors(currentVertex);
             for (size_t j = 0; j < neighbors.getSize(); ++j) {
-                size_t neighborIndex = neighbors.get(j);
-                if (colors[neighborIndex] != -1) {
-                    available[colors[neighborIndex]] = false;
+                const T& neighbor = neighbors.get(j);
+                if (colors[vertexIndexMap[neighbor]] != -1) {
+                    available[colors[vertexIndexMap[neighbor]]] = false;
                 }
             }
 
             // Находим минимальный доступный цвет
             for (size_t c = 0; c < vertexCount; ++c) {
                 if (available[c]) {
-                    colors[i] = c;
+                    colors[vertexIndexMap[currentVertex]] = c;
                     break;
                 }
             }
+            index++;
         }
 
         return colors;
@@ -157,7 +167,7 @@ private:
 
             // Вершина
             sf::CircleShape vertexShape(20);
-            vertexShape.setFillColor(isColored ? getColorFromIndex(colorIndex) : sf::Color::White);
+            vertexShape.setFillColor(isColored ? getColorFromIndex(coloring[colorIndex]) : sf::Color::White);
             vertexShape.setOutlineColor(sf::Color::Black);
             vertexShape.setOutlineThickness(2);
             vertexShape.setPosition(pos.x - vertexShape.getRadius(), pos.y - vertexShape.getRadius());
