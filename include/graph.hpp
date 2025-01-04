@@ -1,109 +1,104 @@
 #pragma once
 
-#include "array_sequence.hpp"
-#include "hash_table.hpp"
 #include <stdexcept>
+#include "set.hpp"
 
 
 template<typename T>
 class Graph {
 private:
-    HashTable<T, ArraySequence<T>> adjacencyList;
+    HashTable<T, ArraySequence<T>> adjacency_list;
 
 public:
-    // Добавление вершины
     void addVertex(const T &vertex) {
-        if (!adjacencyList.contains(vertex)) {
-            adjacencyList.insert(vertex, ArraySequence<T>());
+        if (!adjacency_list.contains(vertex)) {
+            adjacency_list.insert(vertex, ArraySequence<T>());
         }
     }
 
-    // Добавление ребра (неориентированного)
     void addEdge(const T &vertex1, const T &vertex2) {
         addVertex(vertex1);
         addVertex(vertex2);
 
-        ArraySequence<T>& neighbors1 = adjacencyList.get(vertex1);
-        ArraySequence<T>& neighbors2 = adjacencyList.get(vertex2);
+        ArraySequence<T>& neighbors1 = adjacency_list.get(vertex1);
+        ArraySequence<T>& neighbors2 = adjacency_list.get(vertex2);
 
-        // Проверка и добавление vertex2 в список соседей vertex1
         if (!neighbors1.contains(vertex2)) {
             neighbors1.add(vertex2);
         }
 
-        // Проверка и добавление vertex1 в список соседей vertex2
         if (!neighbors2.contains(vertex1)) {
             neighbors2.add(vertex1);
         }
     }
 
-    // Проверка наличия вершины
     bool hasVertex(const T &vertex) const {
-        return adjacencyList.contains(vertex);
+        return adjacency_list.contains(vertex);
     }
 
-    // Проверка наличия ребра
     bool hasEdge(const T &vertex1, const T &vertex2) const {
         if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
             return false;
         }
-        const ArraySequence<T>& neighbors = adjacencyList.get(vertex1);
+        const ArraySequence<T>& neighbors = adjacency_list.get(vertex1);
         return neighbors.contains(vertex2);
     }
 
-    // Получение соседей вершины
     ArraySequence<T> getNeighbors(const T &vertex) const {
         if (!hasVertex(vertex)) {
             throw std::runtime_error("Vertex not found");
         }
-        return adjacencyList.get(vertex);
+        return adjacency_list.get(vertex);
     }
 
-    // Удаление ребра
     void removeEdge(const T &vertex1, const T &vertex2) {
         if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
             return;
         }
 
-        ArraySequence<T>& neighbors1 = adjacencyList.get(vertex1);
+        ArraySequence<T>& neighbors1 = adjacency_list.get(vertex1);
         neighbors1.removeElement(vertex2);
 
-        ArraySequence<T>& neighbors2 = adjacencyList.get(vertex2);
+        ArraySequence<T>& neighbors2 = adjacency_list.get(vertex2);
         neighbors2.removeElement(vertex1);
     }
 
-    // Удаление вершины
     void removeVertex(const T &vertex) {
         if(!hasVertex(vertex)) {
             throw std::runtime_error("Vertex not found");
         }
 
-        ArraySequence<T> neighbors = adjacencyList.get(vertex);
+        ArraySequence<T> neighbors = adjacency_list.get(vertex);
         for (size_t i = 0; i < neighbors.getSize(); ++i) {
             const T& adjacentVertex = neighbors.get(i);
-            ArraySequence<T>& adjNeighbors = adjacencyList.get(adjacentVertex);
+            ArraySequence<T>& adjNeighbors = adjacency_list.get(adjacentVertex);
             adjNeighbors.removeElement(vertex);
         }
 
-        adjacencyList.remove(vertex);
+        adjacency_list.remove(vertex);
     }
 
-    // Получение количества вершин
     size_t getVertexCount() const {
-        return adjacencyList.size();
+        return adjacency_list.size();
     }
 
-    // Получение количества ребер
     size_t getEdgeCount() const {
         size_t edgeCount = 0;
-        for (const auto& pair : adjacencyList) {
-            edgeCount += pair.second.getSize();
+        HashSet<std::pair<T, T>> edges;
+        for (const auto& pair : adjacency_list) {
+            const T& vertex = pair.first;
+            const ArraySequence<T>& neighbors = pair.second;
+            for (size_t i = 0; i < neighbors.getSize(); ++i) {
+                const T& neighbor = neighbors.get(i);
+                if (vertex < neighbor) {
+                    edges.insert(std::make_pair(vertex, neighbor));
+                }
+            }
         }
-        return edgeCount / 2;
+        return edges.size();
     }
 
-    // Получение списка смежности
     HashTable<T, ArraySequence<T>> getAdjacencyList() const {
-        return adjacencyList;
+        return adjacency_list;
     }
 };

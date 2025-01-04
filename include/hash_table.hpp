@@ -6,6 +6,14 @@
 #include "hash_table_iterators.hpp"
 
 
+struct PairHash {
+    std::size_t operator()(const std::pair<int, int>& p) const {
+        auto hash1 = std::hash<int>{}(p.first);
+        auto hash2 = std::hash<int>{}(p.second);
+        return hash1 ^ hash2;
+    }
+};
+
 template<typename K, typename V>
 struct HashNode {
     K key;
@@ -43,7 +51,12 @@ private:
 
     // Определение базовой хеш-функции
     size_t getHashCode(const K &key) const {
-        return std::hash<K>{}(key);
+        if constexpr (std::is_same_v<K, std::pair<int, int>>) {
+            PairHash ph;
+            return ph(key);
+        } else {
+            return std::hash<K>{}(key);
+        }
     }
 
     // Получение индекса в таблице
