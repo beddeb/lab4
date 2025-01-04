@@ -1,29 +1,26 @@
 #include <iostream>
-#include "include/graph.hpp"
 #include "include/render_graph.hpp"
 
+
 int main() {
-    Graph<std::string> graph;
+    Graph<int> graph;
 
-    graph.addVertex("1");
-    graph.addVertex("2");
-    graph.addVertex("3");
-    graph.addVertex("4");
-    graph.addVertex("5");
-    graph.addVertex("6");
-
-
-    graph.addEdge(0, 1); // A -> B
-    graph.addEdge(0, 2); // A -> C
-    graph.addEdge(1, 3); // B -> D
-    graph.addEdge(2, 3); // C -> D
-    graph.addEdge(1, 4);
-    graph.addEdge(0, 3);
+    // Добавляем вершины и рёбра в граф
+    graph.addVertex(1);
+    graph.addVertex(2);
+    graph.addVertex(3);
+    graph.addVertex(4);
     graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(1, 3);
+    graph.addEdge(1, 4);
+    graph.addEdge(2, 4);
 
-    GraphRenderer<std::string> renderer(graph, 800, 600);
+//    sf::ContextSettings settings;
+//    settings.antialiasingLevel = 8;
+
+    GraphRenderer<int> renderer(graph, 800, 600);
     renderer.colorizeGraph();
-    renderer.highlightSpanningTree();  // Выделяем остов графа
     renderer.run();
 
     return 0;
