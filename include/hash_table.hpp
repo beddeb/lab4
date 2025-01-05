@@ -187,6 +187,22 @@ public:
         return findNode(bucket, key) != nullptr;
     }
 
+    V& operator[](const K& key) {
+        ListSequence<HashNode<K, V>>& bucket = getBucket(key);
+        HashNode<K, V>* node = findNode(bucket, key);
+
+        if (node != nullptr) {
+            return node->value;
+        }
+
+        insert(key, V());
+        return get(key);
+    }
+
+    const V& operator[](const K& key) const {
+        return get(key);
+    }
+
     using iterator = HashTableIterator<K, V>;
     using const_iterator = ConstHashTableIterator<K, V>;
 

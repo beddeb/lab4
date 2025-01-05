@@ -2,9 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <queue>
-#include <map>
 #include "graph.hpp"
+#include "calc_algs.hpp"
+
 
 template <typename T>
 std::string toString(const T& value) {
@@ -27,7 +27,7 @@ public:
         if (!font.loadFromFile("../externallibs/font.ttf")) {
             throw std::runtime_error("Failed to load font");
         }
-        coloring = greedyColoring();
+        coloring = greedyColoring(graph);
     }
 
     void run() {
@@ -62,112 +62,6 @@ private:
         mst_edges = kruskal(graph);
     }
 
-    std::vector<size_t> greedyColoring() {
-        size_t vertexCount = graph.getVertexCount();
-        std::vector<size_t> colors(vertexCount, -1);
-        std::map<T, size_t> vertexIndexMap;
-        size_t index = 0;
-
-        for (const auto& pair : graph.getAdjacencyList()) {
-            vertexIndexMap[pair.first] = index++;
-        }
-
-        index = 0;
-        for (const auto& pair : graph.getAdjacencyList()) {
-            const T& currentVertex = pair.first;
-            std::vector<bool> available(vertexCount, true);
-
-            const auto& neighbors = graph.getNeighbors(currentVertex);
-            for (size_t j = 0; j < neighbors.getSize(); ++j) {
-                const T& neighbor = neighbors.get(j);
-                if (colors[vertexIndexMap[neighbor]] != -1) {
-                    available[colors[vertexIndexMap[neighbor]]] = false;
-                }
-            }
-
-            for (size_t c = 0; c < vertexCount; ++c) {
-                if (available[c]) {
-                    colors[vertexIndexMap[currentVertex]] = c;
-                    break;
-                }
-            }
-            index++;
-        }
-
-        return colors;
-    }
-
-    sf::Color getColorFromIndex(size_t index) {
-        static const std::vector<sf::Color> colors = {
-                sf::Color::Red,
-                sf::Color::Green,
-                sf::Color::Blue,
-                sf::Color::Yellow,
-                sf::Color::Cyan,
-                sf::Color::Magenta
-        };
-        return colors[index % colors.size()];
-    }
-
-    ArraySequence<Edge<T>> kruskal(const Graph<T>& graph) {
-        ArraySequence<Edge<T>> mst;
-        DisjointSet disjointSet;
-
-        for (const auto& vertex : graph.getAdjacencyList()) {
-            disjointSet.makeSet(vertex.first);
-        }
-
-        ArraySequence<Edge<T>> edges = graph.getEdges();
-        edges.sort([](const Edge<T>& a, const Edge<T>& b) {
-            return a.weight < b.weight;
-        });
-
-        for (const auto& edge : edges) {
-            if (disjointSet.findSet(edge.vertex1) != disjointSet.findSet(edge.vertex2)) {
-                mst.add(edge);
-                disjointSet.unionSets(edge.vertex1, edge.vertex2);
-            }
-        }
-
-        return mst;
-    }
-
-    class DisjointSet {
-    private:
-        std::map<T, T> parent;
-        std::map<T, int> rank;
-
-    public:
-        void makeSet(const T& vertex) {
-            parent[vertex] = vertex;
-            rank[vertex] = 0;
-        }
-
-        T findSet(const T& vertex) {
-            if (parent[vertex] != vertex) {
-                parent[vertex] = findSet(parent[vertex]);
-            }
-            return parent[vertex];
-        }
-
-        void unionSets(const T& vertex1, const T& vertex2) {
-            T root1 = findSet(vertex1);
-            T root2 = findSet(vertex2);
-
-            if (root1 != root2) {
-                if (rank[root1] < rank[root2]) {
-                    parent[root1] = root2;
-                } else if (rank[root1] > rank[root2]) {
-                    parent[root2] = root1;
-                } else {
-                    parent[root2] = root1;
-                    rank[root1]++;
-                }
-            }
-        }
-
-    };
-
     void processEvents() {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -189,7 +83,7 @@ private:
         if (vertexCount == 0) return;
 
         float angleStep = 2 * M_PI / vertexCount;
-        std::map<T, sf::Vector2f> vertexPositions;
+        HashTable<T, sf::Vector2f> vertexPositions;
         size_t colorIndex = 0;
 
         for (const auto& pair : adjacencyList) {
