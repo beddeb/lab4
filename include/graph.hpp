@@ -3,11 +3,22 @@
 #include <stdexcept>
 #include "set.hpp"
 
+template<typename T>
+struct Edge {
+    T vertex1;
+    T vertex2;
+    int weight;
+
+    bool operator==(const Edge& other) const {
+        return vertex1 == other.vertex1 && vertex2 == other.vertex2 && weight == other.weight;
+    }
+};
 
 template<typename T>
 class Graph {
 private:
     HashTable<T, ArraySequence<T>> adjacency_list;
+    ArraySequence<Edge<T>> edges;
 
 public:
     void addVertex(const T &vertex) {
@@ -16,7 +27,7 @@ public:
         }
     }
 
-    void addEdge(const T &vertex1, const T &vertex2) {
+    void addEdge(const T &vertex1, const T &vertex2, int weight = 0) {
         addVertex(vertex1);
         addVertex(vertex2);
 
@@ -30,6 +41,8 @@ public:
         if (!neighbors2.contains(vertex1)) {
             neighbors2.add(vertex1);
         }
+
+        edges.add(Edge<T>{vertex1, vertex2, weight});
     }
 
     bool hasVertex(const T &vertex) const {
@@ -61,6 +74,13 @@ public:
 
         ArraySequence<T>& neighbors2 = adjacency_list.get(vertex2);
         neighbors2.removeElement(vertex1);
+
+        for (auto& edge : edges) {
+            if (edge.vertex1 == vertex1 && edge.vertex2 == vertex2) {
+                edges.removeElement(edge);
+                break;
+            }
+        }
     }
 
     void removeVertex(const T &vertex) {
@@ -76,6 +96,13 @@ public:
         }
 
         adjacency_list.remove(vertex);
+
+        for (auto& edge : edges) {
+            if (edge.vertex1 == vertex || edge.vertex2 == vertex) {
+                edges.removeElement(edge);
+                break;
+            }
+        }
     }
 
     size_t getVertexCount() const {
@@ -100,5 +127,9 @@ public:
 
     HashTable<T, ArraySequence<T>> getAdjacencyList() const {
         return adjacency_list;
+    }
+
+    ArraySequence<Edge<T>> getEdges() const {
+        return edges;
     }
 };

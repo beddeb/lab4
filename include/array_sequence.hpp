@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <utility>
+#include <functional>
 #include "sequence.hpp"
 
 
@@ -32,6 +33,10 @@ public:
 
     ~ArraySequence() {
         delete[] data;
+    }
+
+    void sort(std::function<bool(const T&, const T&)> comparator) {
+        std::sort(data, data + Sequence<T>::size, comparator);
     }
 
     void add(const T &element) override {
