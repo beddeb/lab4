@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <utility>
-#include <functional>
+#include "sorts_algs.hpp"
 #include "sequence.hpp"
 
 
@@ -10,6 +10,30 @@ template<typename T>
 class ArraySequence : public Sequence<T> {
 private:
     T *data;
+
+    template<typename U = T>
+    void sortImpl() {
+        QuickSort<T> sorter;
+
+        if constexpr (std::is_same_v<U, Edge<typename U::vertex_type>>) {
+            sorter.sort(*this,
+                        [](const U& a, const U& b) {
+                            return a.weight < b.weight;
+                        }
+            );
+        }
+
+        else if constexpr (std::is_arithmetic_v<U> || std::is_same_v<U, std::string>) {
+            sorter.sort(*this,
+                        [](const U& a, const U& b) {
+                            return a < b;
+                        }
+            );
+        }
+        else {
+            throw std::runtime_error("Cannot sort this type");
+        }
+    }
 
 public:
     explicit ArraySequence(size_t size = 0) : Sequence<T>(size), data(new T[size]) {}
@@ -35,8 +59,15 @@ public:
         delete[] data;
     }
 
-    void sort(std::function<bool(const T&, const T&)> comparator) {
-        std::sort(data, data + Sequence<T>::size, comparator);
+    void sort() {
+        sortImpl();
+    }
+
+    // Переопределение сортировки
+    template<typename CompareFunc>
+    void sort(CompareFunc customCompare) {
+        QuickSort<T> sorter;
+        sorter.sort(*this, customCompare);
     }
 
     void add(const T &element) override {

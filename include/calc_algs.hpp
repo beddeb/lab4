@@ -93,9 +93,7 @@ ArraySequence<Edge<T>> kruskal(const Graph<T>& graph) {
     }
 
     ArraySequence<Edge<T>> edges = graph.getEdges();
-    edges.sort([](const Edge<T>& a, const Edge<T>& b) {
-        return a.weight < b.weight;
-    });
+    edges.sort();
 
     for (const auto& edge : edges) {
         if (disjointSet.findSet(edge.vertex1) != disjointSet.findSet(edge.vertex2)) {

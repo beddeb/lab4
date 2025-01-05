@@ -3,14 +3,29 @@
 #include <stdexcept>
 #include "set.hpp"
 
-template<typename T>
-struct Edge {
+
+template <typename T>
+class Edge {
+public:
+    using vertex_type = T;
+
     T vertex1;
     T vertex2;
     int weight;
 
+    Edge() : weight(0) {}
+
+    Edge(const T& v1, const T& v2, int w = 0)
+            : vertex1(v1), vertex2(v2), weight(w) {}
+
     bool operator==(const Edge& other) const {
-        return vertex1 == other.vertex1 && vertex2 == other.vertex2 && weight == other.weight;
+        return vertex1 == other.vertex1 &&
+               vertex2 == other.vertex2 &&
+               std::abs(weight - other.weight) < 1e-9;
+    }
+
+    bool operator<(const Edge& other) const {
+        return weight < other.weight;
     }
 };
 
