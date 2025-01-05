@@ -3,10 +3,9 @@
 #include <string>
 
 
-int main() {
-    Graph<std::string> graph;
-
+void menuStaff() {
     std::cout << "Available commands:\n"
+              << "  help                - Commands list\n"
               << "  addv <vertex>       - Add a vertex\n"
               << "  delv <vertex>       - Remove a vertex\n"
               << "  adde <v1> <v2>      - Add an edge (bidirectional)\n"
@@ -14,6 +13,12 @@ int main() {
               << "  color               - Enable vertex coloring\n"
               << "  render              - Start rendering the graph\n"
               << "  exit                - Exit the program\n\n";
+}
+
+int main() {
+    Graph<std::string> graph;
+
+    menuStaff();
 
     bool isRunning = true;
     bool needColor = false;
@@ -23,7 +28,9 @@ int main() {
         std::string command;
         std::cin >> command;
 
-        if (command == "addv") {
+        if (command == "help"){
+            menuStaff();
+        } else if (command == "addv") {
             std::string v;
             std::cin >> v;
             graph.addVertex(v);

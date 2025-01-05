@@ -1,9 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <vector>
-#include <queue>
+#include <vector> //// изменить на кастомную
+#include <queue> //// изменить на кастомную
 #include <map>
 #include "graph.hpp"
+
 
 template <typename T>
 std::string toString(const T& value) {
@@ -21,7 +22,7 @@ public:
     GraphRenderer(const Graph<T>& graph, unsigned int windowWidth, unsigned int windowHeight)
             : graph(graph),
               window(sf::VideoMode(windowWidth, windowHeight), "Graph Renderer"),
-              isColored(false) {
+              is_colored(false) {
         if (!font.loadFromFile("../externallibs/font.ttf")) {
             throw std::runtime_error("Failed to load font");
         }
@@ -37,7 +38,7 @@ public:
     }
 
     void toggleColorizeGraph() {
-        isColored = !isColored;
+        is_colored = !is_colored;
     }
 
 private:
@@ -45,17 +46,16 @@ private:
     sf::RenderWindow window;
     std::vector<sf::CircleShape> vertices;
     std::vector<sf::VertexArray> edges;
-    std::vector<sf::Text> vertexLabels;
+    std::vector<sf::Text> vertex_labels;
     sf::Font font;
-    bool isColored;
-
+    bool is_colored;
     std::vector<size_t> coloring;  // Хранит цвета для каждой вершины
 
     // Жадный алгоритм раскраски графа
     std::vector<size_t> greedyColoring() {
         size_t vertexCount = graph.getVertexCount();
         std::vector<size_t> colors(vertexCount, -1);
-        std::map<T, size_t> vertexIndexMap; // Создаем карту соответствия вершины и индекса
+        std::map<T, size_t> vertexIndexMap;
         size_t index = 0;
 
         // Назначаем индексы вершинам, чтобы использовать их в массиве цветов
@@ -114,7 +114,7 @@ private:
     void update() {
         vertices.clear();
         edges.clear();
-        vertexLabels.clear();
+        vertex_labels.clear();
 
         float radius = std::min(window.getSize().x, window.getSize().y) * 0.35f;
         auto adjacencyList = graph.getAdjacencyList();
@@ -146,7 +146,7 @@ private:
 
             for (size_t i = 0; i < neighbors.getSize(); ++i) {
                 const T& neighbor = neighbors.get(i);
-                if (vertex < neighbor) { // Рисуем каждое ребро только один раз
+                if (vertex < neighbor) {
                     sf::Vector2f pos2 = vertexPositions[neighbor];
 
                     sf::VertexArray edge(sf::Lines, 2);
@@ -167,7 +167,7 @@ private:
 
             // Вершина
             sf::CircleShape vertexShape(20);
-            vertexShape.setFillColor(isColored ? getColorFromIndex(coloring[colorIndex]) : sf::Color::White);
+            vertexShape.setFillColor(is_colored ? getColorFromIndex(coloring[colorIndex]) : sf::Color::White);
             vertexShape.setOutlineColor(sf::Color::Black);
             vertexShape.setOutlineThickness(2);
             vertexShape.setPosition(pos.x - vertexShape.getRadius(), pos.y - vertexShape.getRadius());
@@ -184,7 +184,7 @@ private:
                     pos.x - textBounds.width / 2,
                     pos.y - textBounds.height / 2
             );
-            vertexLabels.push_back(label);
+            vertex_labels.push_back(label);
 
             colorIndex++;
         }
@@ -204,7 +204,7 @@ private:
         }
 
         // Метки
-        for (const auto& label : vertexLabels) {
+        for (const auto& label : vertex_labels) {
             window.draw(label);
         }
 
