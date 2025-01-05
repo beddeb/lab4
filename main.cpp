@@ -1,7 +1,5 @@
 #include <iostream>
 #include "include/render_graph.hpp"
-#include <string>
-
 
 void menuStaff() {
     std::cout << "Available commands:\n"
@@ -10,7 +8,7 @@ void menuStaff() {
               << "  delv <vertex>       - Remove a vertex\n"
               << "  adde <v1> <v2>      - Add an edge (bidirectional)\n"
               << "  dele <v1> <v2>      - Remove an edge (bidirectional)\n"
-              << "  color               - Enable vertex coloring\n"
+              << "  color               - Toggle vertex coloring\n"
               << "  render              - Start rendering the graph\n"
               << "  exit                - Exit the program\n\n";
 }
@@ -55,8 +53,8 @@ int main() {
             std::cout << "Edge (" << v1 << ", " << v2 << ") removed.\n";
         }
         else if (command == "color") {
-            needColor = true;
-            std::cout << "Coloring will be applied when rendering.\n";
+            needColor = !needColor;
+            std::cout << "Vertex coloring is now " << (needColor ? "enabled" : "disabled") << ".\n";
         }
         else if (command == "render") {
             GraphRenderer<std::string> renderer(graph, 800, 600);

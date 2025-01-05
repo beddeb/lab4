@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <vector> //// изменить на кастомную
 #include <queue> //// изменить на кастомную
 #include <map>
 #include "graph.hpp"
