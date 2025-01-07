@@ -12,7 +12,7 @@ public:
     explicit HashSet(size_t initial_capacity = 4)
             : table(initial_capacity) {}
 
-    void insert(const T &key) {
+    void add(const T &key) {
         table.insert(key, true);
     }
 

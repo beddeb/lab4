@@ -393,7 +393,7 @@ public:
     /// into the string, starting from \a position.
     ///
     /// \param position Position of insertion
-    /// \param str      Characters to insert
+    /// \param str      Characters to add
     ///
     ////////////////////////////////////////////////////////////
     void insert(std::size_t position, const String& str);

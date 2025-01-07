@@ -16,9 +16,9 @@ void chronoInsertSet(size_t elementCount) {
     for (size_t i = 0; i < elementCount; ++i) {
         if constexpr (is_same_v<Container, HashSet<T>>) {
             if constexpr (is_same_v<T, std::string>) {
-                set.insert(to_string(i));
+                set.add(to_string(i));
             } else {
-                set.insert(i);
+                set.add(i);
             }
         } else {
             if constexpr (is_same_v<T, std::string>) {
@@ -41,10 +41,10 @@ void chronoRemoveSet(size_t elementCount) {
     for (size_t i = 0; i < elementCount; ++i) {
         if constexpr (is_same_v<Container, HashSet<T>>) {
             if constexpr (is_same_v<T, std::string>) {
-                set.insert(to_string(i));
+                set.add(to_string(i));
                 elements.push_back(to_string(i));
             } else {
-                set.insert(i);
+                set.add(i);
                 elements.push_back(i);
             }
         } else {

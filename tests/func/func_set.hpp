@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../include/set.hpp"
+#include "../../include/hash_set.hpp"
 
 
 void testAddS();

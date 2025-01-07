@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdexcept>
-#include "set.hpp"
+#include "hash_set.hpp"
 
 
 template <typename T>
@@ -133,7 +133,7 @@ public:
             for (size_t i = 0; i < neighbors.getSize(); ++i) {
                 const T& neighbor = neighbors.get(i);
                 if (vertex < neighbor) {
-                    edges.insert(std::make_pair(vertex, neighbor));
+                    edges.add(std::make_pair(vertex, neighbor));
                 }
             }
         }

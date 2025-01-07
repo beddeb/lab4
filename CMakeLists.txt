@@ -15,7 +15,9 @@ add_executable(lab4 main.cpp
         tests/chrono/chrono_sequences.cpp
         tests/chrono/chrono_hash_table.cpp
         tests/chrono/chrono_set.cpp
-        tests/chrono/demangle.cpp)
+        tests/chrono/demangle.cpp
+
+        graphics/plot.cpp)
 
 set(SFML_DIR externallibs/sfml/sfmlx64win/SFML-2.6.1/lib/cmake/SFML)
 

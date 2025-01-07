@@ -252,7 +252,7 @@ Friends</h2></td></tr>
 <li>data is interpreted correctly according to the endianness </li>
 <li>the bounds of the packet are preserved (one send == one receive)</li>
 </ul>
-<p>The <a class="el" href="classsf_1_1Packet.html" title="Utility class to build blocks of data to transfer over the network.">sf::Packet</a> class provides both input and output modes. It is designed to follow the behavior of standard C++ streams, using operators &gt;&gt; and &lt;&lt; to extract and insert data.</p>
+<p>The <a class="el" href="classsf_1_1Packet.html" title="Utility class to build blocks of data to transfer over the network.">sf::Packet</a> class provides both input and output modes. It is designed to follow the behavior of standard C++ streams, using operators &gt;&gt; and &lt;&lt; to extract and add data.</p>
 <p>It is recommended to use only fixed-size types (like sf::Int32, etc.), to avoid possible differences between the sender and the receiver. Indeed, the native C++ types may have different sizes on two platforms and your data may be corrupted if that happens.</p>
 <p>Usage example: </p><div class="fragment"><div class="line">sf::Uint32 x = 24;</div>
 <div class="line">std::string s = <span class="stringliteral">&quot;hello&quot;</span>;</div>

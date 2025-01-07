@@ -13445,7 +13445,7 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>insert</name>
+      <name>add</name>
       <anchorfile>classsf_1_1String.html</anchorfile>
       <anchor>ad0b1455deabf07af13ee79812e05fa02</anchor>
       <arglist>(std::size_t position, const String &amp;str)</arglist>

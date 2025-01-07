@@ -5,8 +5,8 @@
 
 void testAddS() {
     HashSet<int> set;
-    set.insert(1);
-    set.insert(2);
+    set.add(1);
+    set.add(2);
 
     assert(("Add_value_0", set.contains(1)));
     assert(("Add_value_1", set.contains(2)));
@@ -14,9 +14,9 @@ void testAddS() {
 
 void testAddDuplicateElementS() {
     HashSet<int> set;
-    set.insert(1);
+    set.add(1);
     assert(("AddDuplicateElement_size_0", set.size() == 1));
-    set.insert(1);
+    set.add(1);
     assert(("AddDuplicateElement_size_1", set.size() == 1));
     set.remove(1);
     assert(("AddDuplicateElement_size_2", set.size() == 0));
@@ -24,8 +24,8 @@ void testAddDuplicateElementS() {
 
 void testRemoveS() {
     HashSet<int> set;
-    set.insert(1);
-    set.insert(2);
+    set.add(1);
+    set.add(2);
 
     set.remove(1);
     assert(("Remove_value_0", set.contains(1) == false));
@@ -34,7 +34,7 @@ void testRemoveS() {
 
 void testRemoveNonexistentElementS() {
     HashSet<int> set;
-    set.insert(1);
+    set.add(1);
 
     try {
         set.remove(2);
@@ -46,8 +46,8 @@ void testRemoveNonexistentElementS() {
 
 void testContainsS() {
     HashSet<int> set;
-    set.insert(1);
-    set.insert(2);
+    set.add(1);
+    set.add(2);
 
     assert(("Contains_value_0", set.contains(1)));
     assert(("Contains_value_1", set.contains(2)));
@@ -58,10 +58,10 @@ void testSizeS() {
     HashSet<int> set;
     assert(("Size_0", set.size() == 0));
 
-    set.insert(1);
+    set.add(1);
     assert(("Size_1", set.size() == 1));
 
-    set.insert(2);
+    set.add(2);
     assert(("Size_2", set.size() == 2));
 
     set.remove(1);
@@ -70,9 +70,9 @@ void testSizeS() {
 
 void testIteratorsS() {
     HashSet<int> set;
-    set.insert(1);
-    set.insert(2);
-    set.insert(3);
+    set.add(1);
+    set.add(2);
+    set.add(3);
 
     int count = 0;
     for (auto it = set.begin(); it != set.end(); ++it) {
