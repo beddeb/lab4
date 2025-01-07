@@ -6,10 +6,18 @@
 #include "hash_table_iterators.hpp"
 
 
-struct PairHash {
+struct PairHashInt {
     std::size_t operator()(const std::pair<int, int>& p) const {
         auto hash1 = std::hash<int>{}(p.first);
         auto hash2 = std::hash<int>{}(p.second);
+        return hash1 ^ hash2;
+    }
+};
+
+struct PairHashStr {
+    std::size_t operator()(const std::pair<std::string, std::string>& p) const {
+        auto hash1 = std::hash<std::string>{}(p.first);
+        auto hash2 = std::hash<std::string>{}(p.second);
         return hash1 ^ hash2;
     }
 };
@@ -52,7 +60,10 @@ private:
     // Определение базовой хеш-функции
     size_t getHashCode(const K &key) const {
         if constexpr (std::is_same_v<K, std::pair<int, int>>) {
-            PairHash ph;
+            PairHashInt ph;
+            return ph(key);
+        } else if constexpr (std::is_same_v<K, std::pair<std::string, std::string>>) {
+            PairHashStr ph;
             return ph(key);
         } else {
             return std::hash<K>{}(key);

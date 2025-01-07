@@ -10,6 +10,7 @@ add_executable(lab4 main.cpp
         tests/func/func_sequences.cpp
         tests/func/func_hash_table.cpp
         tests/func/func_set.cpp
+        tests/func/func_graph.cpp
 
         tests/chrono/chrono_sequences.cpp
         tests/chrono/chrono_hash_table.cpp
