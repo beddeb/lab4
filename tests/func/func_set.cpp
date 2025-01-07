@@ -96,5 +96,5 @@ void testSet() {
     testSizeS();
     testIteratorsS();
 
-    std::cout << "All tests passed! (Set)" << std::endl;
+    std::cout << "All tests passed! (HashSet)" << std::endl;
 }

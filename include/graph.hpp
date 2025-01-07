@@ -36,6 +36,32 @@ private:
     ArraySequence<Edge<T>> edges;
 
 public:
+    Graph() = default;
+
+    Graph(const Graph& other)
+            : adjacency_list(other.adjacency_list),
+              edges(other.edges) {}
+
+    Graph(Graph&& other) noexcept
+            : adjacency_list(std::move(other.adjacency_list)),
+              edges(std::move(other.edges)) {}
+
+    Graph& operator=(const Graph& other) {
+        if (this != &other) {
+            adjacency_list = other.adjacency_list;
+            edges = other.edges;
+        }
+        return *this;
+    }
+
+    Graph& operator=(Graph&& other) noexcept {
+        if (this != &other) {
+            adjacency_list = std::move(other.adjacency_list);
+            edges = std::move(other.edges);
+        }
+        return *this;
+    }
+
     void addVertex(const T &vertex) {
         if (!adjacency_list.contains(vertex)) {
             adjacency_list.insert(vertex, ArraySequence<T>());
@@ -55,6 +81,14 @@ public:
 
         if (!neighbors2.contains(vertex1)) {
             neighbors2.add(vertex1);
+        }
+
+        for (auto& edge : edges) {
+            if ((edge.vertex1 == vertex1 && edge.vertex2 == vertex2) ||
+                (edge.vertex1 == vertex2 && edge.vertex2 == vertex1)) {
+                edge.weight = weight;
+                return;
+            }
         }
 
         edges.add(Edge<T>{vertex1, vertex2, weight});

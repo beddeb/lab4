@@ -18,34 +18,6 @@ std::string toString(const std::string& value) {
 
 template <typename T>
 class GraphRenderer {
-public:
-    GraphRenderer(const Graph<T>& graph, unsigned int windowWidth, unsigned int windowHeight)
-            : graph(graph),
-              window(sf::VideoMode(windowWidth, windowHeight), "Graph Renderer"),
-              is_colored(false),
-              is_mst_colored(false) {
-        if (!font.loadFromFile("../externallibs/font.ttf")) {
-            throw std::runtime_error("Failed to load font");
-        }
-        coloring = greedyColoring(graph);
-    }
-
-    void run() {
-        while (window.isOpen()) {
-            processEvents();
-            update();
-            render();
-        }
-    }
-
-    void toggleColorizeGraph() {
-        is_colored = !is_colored;
-    }
-
-    void toggleColorizeMST() {
-        is_mst_colored = !is_mst_colored;
-    }
-
 private:
     const Graph<T>& graph;
     sf::RenderWindow window;
@@ -186,5 +158,33 @@ private:
         }
 
         window.display();
+    }
+
+public:
+    GraphRenderer(const Graph<T>& graph, unsigned int windowWidth, unsigned int windowHeight)
+            : graph(graph),
+              window(sf::VideoMode(windowWidth, windowHeight), "Graph Renderer"),
+              is_colored(false),
+              is_mst_colored(false) {
+        if (!font.loadFromFile("../externallibs/font.ttf")) {
+            throw std::runtime_error("Failed to load font");
+        }
+        coloring = greedyColoring(graph);
+    }
+
+    void run() {
+        while (window.isOpen()) {
+            processEvents();
+            update();
+            render();
+        }
+    }
+
+    void toggleColorizeGraph() {
+        is_colored = !is_colored;
+    }
+
+    void toggleColorizeMST() {
+        is_mst_colored = !is_mst_colored;
     }
 };
