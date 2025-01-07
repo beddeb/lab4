@@ -29,9 +29,55 @@ private:
     bool is_mst_colored;
     std::vector<size_t> coloring;
     ArraySequence<Edge<T>> mst_edges;
+    ArraySequence<T> shortest_path;
+    bool show_shortest_path;
 
     void colorMST() {
         mst_edges = kruskal(graph);
+    }
+
+    void drawShortestPath() {
+        if (!show_shortest_path || shortest_path.getSize() < 2) return;
+
+        float radius = std::min(window.getSize().x, window.getSize().y) * 0.35f;
+        float angle_step = 2 * M_PI / graph.getVertexCount();
+
+        // Создаем карту позиций вершин
+        HashTable<T, size_t> vertexIndices;
+        size_t index = 0;
+        for (const auto& pair : graph.getAdjacencyList()) {
+            vertexIndices[pair.first] = index++;
+        }
+
+        // Рисуем только кратчайший путь
+        for (size_t i = 0; i < shortest_path.getSize() - 1; ++i) {
+            const T& v1 = shortest_path.get(i);
+            const T& v2 = shortest_path.get(i + 1);
+
+            float angle1 = vertexIndices[v1] * angle_step;
+            float angle2 = vertexIndices[v2] * angle_step;
+
+            sf::Vector2f pos1(
+                    window.getSize().x / 2 + radius * cos(angle1),
+                    window.getSize().y / 2 + radius * sin(angle1)
+            );
+            sf::Vector2f pos2(
+                    window.getSize().x / 2 + radius * cos(angle2),
+                    window.getSize().y / 2 + radius * sin(angle2)
+            );
+
+            sf::RectangleShape line(sf::Vector2f(
+                    std::sqrt(std::pow(pos2.x - pos1.x, 2) + std::pow(pos2.y - pos1.y, 2)),
+                    3.0f
+            ));
+            line.setPosition(pos1);
+            line.setFillColor(sf::Color::Green);
+
+            float angle = std::atan2(pos2.y - pos1.y, pos2.x - pos1.x) * 180 / M_PI;
+            line.setRotation(angle);
+
+            window.draw(line);
+        }
     }
 
     void processEvents() {
@@ -148,6 +194,9 @@ private:
         for (const auto& edge : edges) {
             window.draw(edge);
         }
+        if (show_shortest_path) {
+            drawShortestPath();
+        }
 
         for (const auto& vertex : vertices) {
             window.draw(vertex);
@@ -186,5 +235,11 @@ public:
 
     void toggleColorizeMST() {
         is_mst_colored = !is_mst_colored;
+    }
+
+    void findShortestPath(const T& start, const T& end) {
+        auto result = dijkstra(graph, start, end);
+        shortest_path = result.first;
+        show_shortest_path = true;
     }
 };

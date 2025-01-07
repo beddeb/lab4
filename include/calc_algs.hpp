@@ -103,3 +103,67 @@ ArraySequence<Edge<T>> kruskal(const Graph<T>& graph) {
     }
     return mst;
 }
+
+template <typename T>
+std::pair<ArraySequence<T>, int> dijkstra(const Graph<T>& graph, const T& start, const T& end) {
+    HashTable<T, int> distances;
+    HashTable<T, T> previous;
+    HashSet<T> unvisited;
+
+    for (const auto& pair : graph.getAdjacencyList()) {
+        const T& vertex = pair.first;
+        distances[vertex] = INT_MAX;
+        unvisited.add(vertex);
+    }
+    distances[start] = 0;
+
+    while (unvisited.size() > 0) {
+        T current;
+        int min_dist = INT_MAX;
+        bool found = false;
+
+        for (const auto& pair : unvisited) {
+            const T& vertex = pair.first;
+            if (distances[vertex] < min_dist) {
+                min_dist = distances[vertex];
+                current = vertex;
+                found = true;
+            }
+        }
+
+        if (!found) break;
+        if (current == end) break;
+        unvisited.remove(current);
+
+        for (const auto& edge : graph.getEdges()) {
+            if (edge.vertex1 == current || edge.vertex2 == current) {
+                T neighbor = (edge.vertex1 == current) ? edge.vertex2 : edge.vertex1;
+                int new_dist = distances[current] + edge.weight;
+
+                if (new_dist < distances[neighbor]) {
+                    distances[neighbor] = new_dist;
+                    previous[neighbor] = current;
+                }
+            }
+        }
+    }
+
+    ArraySequence<T> path;
+    T current = end;
+
+    if (distances[end] != INT_MAX) {
+        while (previous.contains(current)) {
+            path.add(current);
+            current = previous[current];
+        }
+        path.add(start);
+
+        ArraySequence<T> reversedPath;
+        for (int i = path.getSize() - 1; i >= 0; --i) {
+            reversedPath.add(path.get(i));
+        }
+        return {reversedPath, distances[end]};
+    }
+
+    return {path, INT_MAX};
+}

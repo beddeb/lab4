@@ -69,18 +69,16 @@ public:
     }
 
     void addEdge(const T &vertex1, const T &vertex2, int weight = 0) {
-        addVertex(vertex1);
-        addVertex(vertex2);
-
-        ArraySequence<T>& neighbors1 = adjacency_list.get(vertex1);
-        ArraySequence<T>& neighbors2 = adjacency_list.get(vertex2);
-
-        if (!neighbors1.contains(vertex2)) {
-            neighbors1.add(vertex2);
+        if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
+            throw std::runtime_error("Both vertices must exist in the graph before adding an edge");
         }
 
-        if (!neighbors2.contains(vertex1)) {
-            neighbors2.add(vertex1);
+        if (!adjacency_list.get(vertex1).contains(vertex2)) {
+            adjacency_list.get(vertex1).add(vertex2);
+        }
+
+        if (!adjacency_list.get(vertex2).contains(vertex1)) {
+            adjacency_list.get(vertex2).add(vertex1);
         }
 
         for (auto& edge : edges) {
@@ -115,7 +113,7 @@ public:
 
     void removeEdge(const T &vertex1, const T &vertex2) {
         if (!hasVertex(vertex1) || !hasVertex(vertex2)) {
-            return;
+            throw std::runtime_error("One or both vertexes not found");
         }
 
         ArraySequence<T>& neighbors1 = adjacency_list.get(vertex1);

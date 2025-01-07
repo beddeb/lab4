@@ -46,6 +46,7 @@ void menuUser() {
               << "  color               ~ Toggle vertex coloring\n"
               << "  mst                 ~ Color minimum spanning tree\n"
               << "  render              ~ Start rendering the graph\n"
+              << "  path <v1> <v2>      ~ Shortest path between vertices\n"
               << "  cls                 ~ Clear console\n"
               << "  admin               ~ Admin zone\n"
               << "  exit                ~ Exit the program\n";
@@ -93,7 +94,7 @@ void menuGen() {
     std::cout << "Available graphs:\n"
               << "  chgraph <value>     ~ Chain & number of vertexes\n"
               << "  cygraph <value>     ~ Cycle & number of vertexes\n"
-              << "  cograph <value>     ~ Сomplete & number of vertexes\n";
+              << "  cograph <value>     ~ Complete & number of vertexes\n";
 }
 
 void adminProcess() {
@@ -220,35 +221,51 @@ int main() {
                 } else if (choise == "cograph") {
                     gen_graph = generateCompleteGraph<std::string>(numbers);
                 }
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Error: " << e.what() << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "\tError: " << e.what();
             }
             graph = gen_graph;
             std::cout << "Graph generated: edge's weight is 0.\n";
         } else if (command == "addv") {
             std::string v;
             std::cin >> v;
-            graph.addVertex(v);
-            std::cout << "Vertex " << v << " added.\n";
+            try {
+                graph.addVertex(v);
+                std::cout << "Vertex " << v << " added.\n";
+            } catch (const std::exception& e) {
+                std::cerr << "\tError: " << e.what();
+            }
         }
         else if (command == "delv") {
             std::string v;
             std::cin >> v;
-            graph.removeVertex(v);
-            std::cout << "Vertex " << v << " removed.\n";
+            try {
+                graph.removeVertex(v);
+                std::cout << "Vertex " << v << " removed.\n";
+            } catch (const std::exception& e) {
+                std::cerr << "\tError: " << e.what();
+            }
         }
         else if (command == "adde") {
             std::string v1, v2;
             int w;
             std::cin >> v1 >> v2 >> w;
-            graph.addEdge(v1, v2, w);
-            std::cout << "Edge (" << v1 << ", " << v2 << ") with weight " << w << " added.\n";
+            try {
+                graph.addEdge(v1, v2, w);
+                std::cout << "Edge (" << v1 << ", " << v2 << ") with weight " << w << " added.\n";
+            } catch (const std::exception& e) {
+                std::cerr << "\tError: " << e.what();
+            }
         }
         else if (command == "dele") {
             std::string v1, v2;
             std::cin >> v1 >> v2;
-            graph.removeEdge(v1, v2);
-            std::cout << "Edge (" << v1 << ", " << v2 << ") removed.\n";
+            try {
+                graph.removeEdge(v1, v2);
+                std::cout << "Edge (" << v1 << ", " << v2 << ") removed.\n";
+            } catch (const std::exception& e) {
+                std::cerr << "\tError: " << e.what();
+            }
         }
         else if (command == "color") {
             needColor = !needColor;
@@ -257,6 +274,17 @@ int main() {
         else if (command == "mst") {
             needMSTColor = !needMSTColor;
             std::cout << "Minimum spanning tree coloring is now " << (needMSTColor ? "enabled" : "disabled") << ".\n";
+        } else if (command == "path") {
+            GraphRenderer<std::string> renderer(graph, 800, 600);
+            std::string start, end;
+            std::cin >> start >> end;
+            if (graph.hasVertex(start) && graph.hasVertex(end)) {
+                renderer.findShortestPath(start, end);
+                std::cout << "Shortest path will be shown in green.\nVisualization window opened. Close the window to return to the console.\n";
+                renderer.run();
+            } else {
+                std::cout << "One or both vertices don't exist in the graph.\n";
+            }
         }
         else if (command == "render") {
             GraphRenderer<std::string> renderer(graph, 800, 600);
