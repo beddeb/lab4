@@ -59,6 +59,7 @@ void menuAdmin() {
               << "  chrono              ~ Load chrono tests\n"
               << "  plots               ~ Plotting load tests\n"
               << "  cls                 ~ Clear console\n"
+              << "  help                ~ Admin commands list"
               << "  exit                ~ Exit admin zone\n";
 }
 
@@ -104,6 +105,7 @@ void adminProcess() {
         Sequence<DataSeries> plot_data;
         int values;
         std::string command;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::getline(std::cin, command);
         std::stringstream ss(command);
         ss >> command;
@@ -215,17 +217,20 @@ int main() {
             std::cin >> numbers;
             try {
                 if (choise == "chgraph") {
-                    gen_graph = generateChainGraph<std::string>(numbers);
+                    graph = generateChainGraph<std::string>(numbers);
+                    std::cout << "Chain graph generated: edge's weight is 0.\n";
                 } else if (choise == "cygraph") {
-                    gen_graph = generateCycleGraph<std::string>(numbers);
+                    graph = generateCycleGraph<std::string>(numbers);
+                    std::cout << "Cycle graph generated: edge's weight is 0.\n";
                 } else if (choise == "cograph") {
-                    gen_graph = generateCompleteGraph<std::string>(numbers);
+                    graph = generateCompleteGraph<std::string>(numbers);
+                    std::cout << "Complete graph generated: edge's weight is 0.\n";
+                } else {
+                    std::cout << "Unknown command.\n";
                 }
             } catch (const std::exception& e) {
                 std::cerr << "\tError: " << e.what();
             }
-            graph = gen_graph;
-            std::cout << "Graph generated: edge's weight is 0.\n";
         } else if (command == "addv") {
             std::string v;
             std::cin >> v;
@@ -303,7 +308,6 @@ int main() {
             menuUser();
         }
         else if (command == "admin") {
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             adminProcess();
             menuUser();
         }
