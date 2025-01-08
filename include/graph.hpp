@@ -138,18 +138,19 @@ public:
         ArraySequence<T> neighbors = adjacency_list.get(vertex);
         for (size_t i = 0; i < neighbors.getSize(); ++i) {
             const T& adjacentVertex = neighbors.get(i);
-            ArraySequence<T>& adjNeighbors = adjacency_list.get(adjacentVertex);
-            adjNeighbors.removeElement(vertex);
+            ArraySequence<T>& adj_neighbors = adjacency_list.get(adjacentVertex);
+            adj_neighbors.removeElement(vertex);
         }
 
         adjacency_list.remove(vertex);
 
-        for (auto& edge : edges) {
-            if (edge.vertex1 == vertex || edge.vertex2 == vertex) {
-                edges.removeElement(edge);
-                break;
+        ArraySequence<Edge<T>> new_edges;
+        for (const auto& edge : edges) {
+            if (edge.vertex1 != vertex && edge.vertex2 != vertex) {
+                new_edges.add(edge);
             }
         }
+        edges = new_edges;
     }
 
     size_t getVertexCount() const {

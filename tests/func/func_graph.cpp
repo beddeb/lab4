@@ -32,6 +32,8 @@ void testAddEdge() {
     T v1 = getValue<T>(1);
     T v2 = getValue<T>(2);
 
+    graph.addVertex(v1);
+    graph.addVertex(v2);
     graph.addEdge(v1, v2);
     assert(("AddEdge_edge_0", graph.hasEdge(v1, v2)));
     assert(("AddEdge_edge_1", graph.hasEdge(v2, v1)));
@@ -43,6 +45,8 @@ void testAddDuplicateEdge() {
     T v1 = getValue<T>(1);
     T v2 = getValue<T>(2);
 
+    graph.addVertex(v1);
+    graph.addVertex(v2);
     graph.addEdge(v1, v2);
     graph.addEdge(v1, v2);
     assert(("AddDuplicateEdge_edge_0", graph.hasEdge(v1, v2)));
@@ -55,6 +59,8 @@ void testRemoveEdge() {
     T v1 = getValue<T>(1);
     T v2 = getValue<T>(2);
 
+    graph.addVertex(v1);
+    graph.addVertex(v2);
     graph.addEdge(v1, v2);
     graph.removeEdge(v1, v2);
     assert(("RemoveEdge_edge_0", !graph.hasEdge(v1, v2)));
@@ -99,6 +105,9 @@ void testGetEdges() {
     T v1, v2, v3;
     getValues(v1, v2, v3);
 
+    graph.addVertex(v1);
+    graph.addVertex(v2);
+    graph.addVertex(v3);
     graph.addEdge(v1, v2);
     graph.addEdge(v2, v3);
     ArraySequence<Edge<T>> edges = graph.getEdges();
@@ -125,6 +134,9 @@ void testGetEdgeCount() {
     T v1, v2, v3;
     getValues(v1, v2, v3);
 
+    graph.addVertex(v1);
+    graph.addVertex(v2);
+    graph.addVertex(v3);
     graph.addEdge(v1, v2);
     graph.addEdge(v2, v3);
     graph.addEdge(v3, v1);

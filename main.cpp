@@ -59,7 +59,6 @@ void menuAdmin() {
               << "  chrono              ~ Load chrono tests\n"
               << "  plots               ~ Plotting load tests\n"
               << "  cls                 ~ Clear console\n"
-              << "  help                ~ Admin commands list"
               << "  exit                ~ Exit admin zone\n";
 }
 
@@ -105,7 +104,6 @@ void adminProcess() {
         Sequence<DataSeries> plot_data;
         int values;
         std::string command;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::getline(std::cin, command);
         std::stringstream ss(command);
         ss >> command;
@@ -308,6 +306,7 @@ int main() {
             menuUser();
         }
         else if (command == "admin") {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             adminProcess();
             menuUser();
         }

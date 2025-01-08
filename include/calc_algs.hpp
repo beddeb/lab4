@@ -1,15 +1,23 @@
 #pragma once
 
+//sf::Color getColorFromIndex(size_t index) {
+//    static const std::vector<sf::Color> colors = {
+//            sf::Color::Red,
+//            sf::Color::Green,
+//            sf::Color::Blue,
+//            sf::Color::Yellow,
+//            sf::Color::Cyan,
+//            sf::Color::Magenta
+//    };
+//    return colors[index % colors.size()];
+//}
+
 sf::Color getColorFromIndex(size_t index) {
-    static const std::vector<sf::Color> colors = {
-            sf::Color::Red,
-            sf::Color::Green,
-            sf::Color::Blue,
-            sf::Color::Yellow,
-            sf::Color::Cyan,
-            sf::Color::Magenta
-    };
-    return colors[index % colors.size()];
+    sf::Uint8 r = (index * 123) % 256;
+    sf::Uint8 g = (index * 456) % 256;
+    sf::Uint8 b = (index * 789) % 256;
+
+    return sf::Color(r, g, b);
 }
 
 template <typename T>
