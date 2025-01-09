@@ -13,9 +13,9 @@
 //}
 
 sf::Color getColorFromIndex(size_t index) {
-    sf::Uint8 r = (index * 123) % 256;
-    sf::Uint8 g = (index * 456) % 256;
-    sf::Uint8 b = (index * 789) % 256;
+    sf::Uint8 r = (++index * 123) % 256;
+    sf::Uint8 g = (++index * 456) % 256;
+    sf::Uint8 b = (++index * 789) % 256;
 
     return sf::Color(r, g, b);
 }
