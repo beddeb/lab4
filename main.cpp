@@ -220,13 +220,13 @@ int main() {
             try {
                 if (choise == "chgraph") {
                     graph = generateChainGraph<std::string>(numbers, min_w, max_w);
-                    std::cout << "Chain graph generated: edge's weight is 0.\n";
+                    std::cout << "Chain graph generated.\n";
                 } else if (choise == "cygraph") {
                     graph = generateCycleGraph<std::string>(numbers, min_w, max_w);
-                    std::cout << "Cycle graph generated: edge's weight is 0.\n";
+                    std::cout << "Cycle graph generated.\n";
                 } else if (choise == "cograph") {
                     graph = generateCompleteGraph<std::string>(numbers, min_w, max_w);
-                    std::cout << "Complete graph generated: edge's weight is 0.\n";
+                    std::cout << "Complete graph generated.\n";
                 } else {
                     std::cout << "Unknown command.\n";
                 }
