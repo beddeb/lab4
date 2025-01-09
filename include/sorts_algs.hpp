@@ -46,6 +46,3 @@ public:
         quickSortInside(seq, 0, seq.getSize() - 1, compareFunc);
     }
 };
-
-
-

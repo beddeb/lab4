@@ -92,9 +92,9 @@ void menuPlots() {
 
 void menuGen() {
     std::cout << "Available graphs:\n"
-              << "  chgraph <value>     ~ Chain & number of vertexes\n"
-              << "  cygraph <value>     ~ Cycle & number of vertexes\n"
-              << "  cograph <value>     ~ Complete & number of vertexes\n";
+              << "  chgraph <value> <min_w> <max_w>    ~ Chain & number of vertexes\n"
+              << "  cygraph <value> <min_w> <max_w>    ~ Cycle & number of vertexes\n"
+              << "  cograph <value> <min_w> <max_w>    ~ Complete & number of vertexes\n";
 }
 
 void adminProcess() {
@@ -209,19 +209,23 @@ int main() {
             Graph<std::string> gen_graph;
             std::string choise;
             int numbers;
+            int min_w;
+            int max_w;
             menuGen();
             std::cout << "> ";
             std::cin >> choise;
             std::cin >> numbers;
+            std::cin >> min_w;
+            std::cin >> max_w;
             try {
                 if (choise == "chgraph") {
-                    graph = generateChainGraph<std::string>(numbers);
+                    graph = generateChainGraph<std::string>(numbers, min_w, max_w);
                     std::cout << "Chain graph generated: edge's weight is 0.\n";
                 } else if (choise == "cygraph") {
-                    graph = generateCycleGraph<std::string>(numbers);
+                    graph = generateCycleGraph<std::string>(numbers, min_w, max_w);
                     std::cout << "Cycle graph generated: edge's weight is 0.\n";
                 } else if (choise == "cograph") {
-                    graph = generateCompleteGraph<std::string>(numbers);
+                    graph = generateCompleteGraph<std::string>(numbers, min_w, max_w);
                     std::cout << "Complete graph generated: edge's weight is 0.\n";
                 } else {
                     std::cout << "Unknown command.\n";

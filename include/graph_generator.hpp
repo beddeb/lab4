@@ -1,7 +1,11 @@
 #pragma once
 
 #include "graph.hpp"
+#include <random>
 
+
+std::random_device rd;
+std::mt19937 gen(rd());
 
 template<typename T>
 T generateUniqueVertex(int index) {
@@ -15,53 +19,74 @@ T generateUniqueVertex(int index) {
 }
 
 template<typename T>
-Graph<T> generateChainGraph(int numVertices) {
+Graph<T> generateChainGraph(int numVertices, int minWeight, int maxWeight) {
     if (numVertices <= 0) {
         throw std::invalid_argument("Number of vertices must be positive");
     }
 
+    if (minWeight > maxWeight) {
+        throw std::invalid_argument("Minimum weight cannot be greater than maximum weight");
+    }
+
     Graph<T> graph;
+    std::uniform_int_distribution<> dist(minWeight, maxWeight);
+
     for (int i = 0; i < numVertices; ++i) {
         graph.addVertex(generateUniqueVertex<T>(i));
     }
 
     for (int i = 0; i < numVertices - 1; ++i) {
-        graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>(i + 1));
+        int weight = dist(gen);
+        graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>(i + 1), weight);
     }
     return graph;
 }
 
 template<typename T>
-Graph<T> generateCycleGraph(int numVertices) {
+Graph<T> generateCycleGraph(int numVertices, int minWeight, int maxWeight) {
     if (numVertices <= 0) {
         throw std::invalid_argument("Number of vertices must be positive");
     }
 
+    if (minWeight > maxWeight) {
+        throw std::invalid_argument("Minimum weight cannot be greater than maximum weight");
+    }
+
     Graph<T> graph;
+    std::uniform_int_distribution<> dist(minWeight, maxWeight);
+
     for (int i = 0; i < numVertices; ++i) {
         graph.addVertex(generateUniqueVertex<T>(i));
     }
 
     for (int i = 0; i < numVertices; ++i) {
-        graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>((i + 1) % numVertices));
+        int weight = dist(gen);
+        graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>((i + 1) % numVertices), weight);
     }
     return graph;
 }
 
 template<typename T>
-Graph<T> generateCompleteGraph(int numVertices) {
+Graph<T> generateCompleteGraph(int numVertices, int minWeight, int maxWeight) {
     if (numVertices <= 0) {
         throw std::invalid_argument("Number of vertices must be positive");
     }
 
+    if (minWeight > maxWeight) {
+        throw std::invalid_argument("Minimum weight cannot be greater than maximum weight");
+    }
+
     Graph<T> graph;
+    std::uniform_int_distribution<> dist(minWeight, maxWeight);
+
     for (int i = 0; i < numVertices; ++i) {
         graph.addVertex(generateUniqueVertex<T>(i));
     }
 
     for (int i = 0; i < numVertices; ++i) {
         for (int j = i + 1; j < numVertices; ++j) {
-            graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>(j));
+            int weight = dist(gen);
+            graph.addEdge(generateUniqueVertex<T>(i), generateUniqueVertex<T>(j), weight);
         }
     }
     return graph;
